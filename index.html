@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Web - Contexto de Crisis</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <header>
+        <h1>Simulador Económico y de Abastecimiento en Contexto de Crisis</h1>
+        <p>Herramienta educativa para analizar el impacto en la economía familiar y comunitaria</p>
+    </header>
+
+    <nav>
+        <button onclick="cambiarEscenario('carburante')">⛽ Carburantes</button>
+        <button onclick="cambiarEscenario('alimentos')">🍏 Alimentos</button>
+        <button onclick="cambiarEscenario('transporte')">🚌 Transporte</button>
+        <button onclick="cambiarEscenario('compras')">🛒 Presupuesto</button>
+        <button onclick="cambiarEscenario('rumores')">📢 Escasez / Rumores</button>
+        <button onclick="cambiarEscenario('adquisitivo')">📉 Poder Adquisitivo</button>
+    </nav>
+
+    <main>
+        <section id="contexto" class="tarjeta">
+            <h2>Contexto del Desafío</h2>
+            <p>Este simulador interactivo representa, calcula y visualiza de forma matemática simples problemas del contexto actual: abastecimiento de carburantes, transporte, precios de alimentos y la pérdida del poder adquisitivo familiar.</p>
+        </section>
+
+        <section id="sc-carburante" class="escenario-panel">
+            <h2>⛽ Simulador de Abastecimiento de Carburantes</h2>
+            <div class="grid-simulador">
+                <form id="form-carburante" onsubmit="event.preventDefault(); calcularCarburante();">
+                    <div class="campo">
+                        <label>Cantidad inicial (litros):</label>
+                        <input type="number" id="carb-inicial" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Consumo diario (litros):</label>
+                        <input type="number" id="carb-consumo" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Reabastecimiento diario (litros):</label>
+                        <input type="number" id="carb-reabastecimiento" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Nivel crítico de reserva (litros):</label>
+                        <input type="number" id="carb-critico" required min="0">
+                    </div>
+                    <button type="submit" class="btn-calc">Calcular Reserva</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario('form-carburante', 'res-carburante')">Limpiar</button>
+                </form>
+                <div class="resultado-caja" id="res-carburante">Los resultados aparecerán aquí.</div>
+            </div>
+        </section>
+
+        <section id="sc-alimentos" class="escenario-panel" style="display:none;">
+            <h2>🍏 Simulador de Precios de Alimentos</h2>
+            <div class="grid-simulador">
+                <form id="form-alimentos" onsubmit="event.preventDefault(); calcularAlimentos();">
+                    <div class="campo">
+                        <label>Precio Anterior (Bs):</label>
+                        <input type="number" id="alim-anterior" required min="0" step="0.1">
+                    </div>
+                    <div class="campo">
+                        <label>Precio Actual (Bs):</label>
+                        <input type="number" id="alim-actual" required min="0" step="0.1">
+                    </div>
+                    <div class="campo">
+                        <label>Cantidad consumida al mes:</label>
+                        <input type="number" id="alim-cantidad" required min="0">
+                    </div>
+                    <button type="submit" class="btn-calc">Calcular Gasto</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario('form-alimentos', 'res-alimentos')">Limpiar</button>
+                </form>
+                <div class="resultado-caja" id="res-alimentos">Los resultados aparecerán aquí.</div>
+            </div>
+        </section>
+
+        <section id="sc-transporte" class="escenario-panel" style="display:none;">
+            <h2>🚌 Simulador de Costo de Transporte</h2>
+            <div class="grid-simulador">
+                <form id="form-transporte" onsubmit="event.preventDefault(); calcularTransporte();">
+                    <div class="campo">
+                        <label>Distancia normal (km):</label>
+                        <input type="number" id="trans-normal" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Distancia con desvío (km):</label>
+                        <input type="number" id="trans-desvio" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Costo por kilómetro (Bs):</label>
+                        <input type="number" id="trans-costo" required min="0" step="0.1">
+                    </div>
+                    <div class="campo">
+                        <label>Viajes por semana:</label>
+                        <input type="number" id="trans-viajes" required min="0">
+                    </div>
+                    <button type="submit" class="btn-calc">Calcular Costo</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario('form-transporte', 'res-transporte')">Limpiar</button>
+                </form>
+                <div class="resultado-caja" id="res-transporte">Los resultados aparecerán aquí.</div>
+            </div>
+        </section>
+
+        <section id="sc-compras" class="escenario-panel" style="display:none;">
+            <h2>🛒 Simulador de Compras Familiares</h2>
+            <div class="grid-simulador">
+                <form id="form-compras" onsubmit="event.preventDefault(); calcularCompras();">
+                    <div class="campo">
+                        <label>Presupuesto disponible (Bs):</label>
+                        <input type="number" id="comp-presupuesto" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Total de la compra estimado (Bs):</label>
+                        <input type="number" id="comp-total" required min="0">
+                    </div>
+                    <button type="submit" class="btn-calc">Verificar Presupuesto</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario('form-compras', 'res-compras')">Limpiar</button>
+                </form>
+                <div class="resultado-caja" id="res-compras">Los resultados aparecerán aquí.</div>
+            </div>
+        </section>
+
+        <section id="sc-rumores" class="escenario-panel" style="display:none;">
+            <h2>📢 Simulador de Rumor de Escasez</h2>
+            <div class="grid-simulador">
+                <form id="form-rumores" onsubmit="event.preventDefault(); calcularRumores();">
+                    <div class="campo">
+                        <label>Demanda normal (unidades):</label>
+                        <input type="number" id="rum-demanda" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Porcentaje de aumento por rumor (%):</label>
+                        <input type="number" id="rum-aumento" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Stock disponible (unidades):</label>
+                        <input type="number" id="rum-stock" required min="0">
+                    </div>
+                    <button type="submit" class="btn-calc">Simular Demanda</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario('form-rumores', 'res-rumores')">Limpiar</button>
+                </form>
+                <div class="resultado-caja" id="res-rumores">Los resultados aparecerán aquí.</div>
+            </div>
+        </section>
+
+        <section id="sc-adquisitivo" class="escenario-panel" style="display:none;">
+            <h2>📉 Simulador de Pérdida del Poder Adquisitivo</h2>
+            <div class="grid-simulador">
+                <form id="form-adquisitivo" onsubmit="event.preventDefault(); calcularAdquisitivo();">
+                    <div class="campo">
+                        <label>Ingreso familiar mensual (Bs):</label>
+                        <input type="number" id="adq-ingreso" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Gasto mensual anterior (Bs):</label>
+                        <input type="number" id="adq-anterior" required min="0">
+                    </div>
+                    <div class="campo">
+                        <label>Gasto mensual actual (Bs):</label>
+                        <input type="number" id="adq-actual" required min="0">
+                    </div>
+                    <button type="submit" class="btn-calc">Calcular Pérdida</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario('form-adquisitivo', 'res-adquisitivo')">Limpiar</button>
+                </form>
+                <div class="resultado-caja" id="res-adquisitivo">Los resultados aparecerán aquí.</div>
+            </div>
+        </section>
+
+        <section id="casos-estudio" class="tarjeta">
+            <h2>📋 Casos de Estudio Obligatorios para Pruebas</h2>
+            <p>Haz clic en cualquier botón de prueba abajo para cargar de inmediato los datos del documento oficial en el formulario correspondiente:</p>
+            <div class="flex-botones-prueba">
+                <button onclick="cargarCasoEstudio('carburante', [10000, 1200, 300, 2000])">Caso 1: Carburantes (10000L)</button>
+                <button onclick="cargarCasoEstudio('alimentos', [8, 11, 10])">Caso 2: Alimentos (Arroz)</button>
+                <button onclick="cargarCasoEstudio('transporte', [10, 16, 2, 5])">Caso 3: Transporte con Desvío</button>
+                <button onclick="cargarCasoEstudio('compras', [500, 580])">Caso 4: Presupuesto Familiar</button>
+                <button onclick="cargarCasoEstudio('rumores', [100, 40, 120])">Caso 5: Rumores de Escasez</button>
+            </div>
+        </section>
+
+        <section id="conclusiones" class="tarjeta">
+            <h2>Conclusiones</h2>
+            <p>A través de estos modelos matemáticos, podemos observar críticamente cómo los fenómenos de desvíos viales, pánico colectivo e inflación merman rápidamente la economía familiar y el almacenamiento de insumos básicos.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Desarrollado para la materia: <strong>Programación Web I</strong></p>
+        <p>Proyecto: Simulador Integral de Crisis Estudiantil - © 2026</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
